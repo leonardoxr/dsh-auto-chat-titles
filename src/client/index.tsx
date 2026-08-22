@@ -63,8 +63,16 @@ function installStyles(): () => void {
     .dact-action:disabled{color:var(--dsw-alias-label-dimmed);cursor:wait}
     .dact-spin{width:12px;height:12px;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;animation:dact-spin .7s linear infinite}
     @keyframes dact-spin{to{transform:rotate(360deg)}}
-    .dact-card{max-width:720px;color:var(--dsw-alias-label-primary);display:flex;flex-direction:column;gap:14px;padding:4px 0}
-    .dact-card h3{font-size:16px;line-height:24px;margin:0;font-weight:600}
+    .dact-card{box-sizing:border-box;max-width:720px;color:var(--dsw-alias-label-primary);list-style:none;border:1px solid var(--dsw-alias-border-l2);border-radius:16px;overflow:hidden;background:var(--dsw-alias-bg-elevated,transparent)}
+    .dact-card-open{border-color:var(--dsw-alias-border-l1)}
+    .dact-card-header{box-sizing:border-box;width:100%;border:0;background:transparent;color:inherit;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:20px 22px;text-align:left;font:inherit;cursor:pointer}
+    .dact-card-header:hover{background:var(--dsw-alias-interactive-bg-hover)}
+    .dact-card-head{display:flex;min-width:0;flex:1;flex-direction:column;gap:5px}
+    .dact-card-name{font-size:16px;line-height:24px;font-weight:600}
+    .dact-card-description{color:var(--dsw-alias-label-tertiary);font-size:13px;line-height:20px}
+    .dact-card-chevron{flex:none;color:var(--dsw-alias-label-secondary);font-size:18px;line-height:1;transition:transform .18s ease}
+    .dact-card-open .dact-card-chevron{transform:rotate(180deg)}
+    .dact-card-body{display:flex;flex-direction:column;gap:14px;padding:4px 22px 22px}
     .dact-card p{color:var(--dsw-alias-label-tertiary);font-size:13px;line-height:20px;margin:0}
     .dact-grid{display:grid;grid-template-columns:minmax(150px,220px) minmax(220px,1fr);gap:12px 18px;align-items:center}
     .dact-label{display:flex;flex-direction:column;gap:2px;font-size:14px}
@@ -120,6 +128,7 @@ function SettingsCard({ settings, loadModels }: SettingsCardProps): ReactNode {
   const [groups, setGroups] = useState<ModelProviderGroup[]>([])
   const [catalogFailures, setCatalogFailures] = useState<string[]>([])
   const [status, setStatus] = useState<{ kind: 'idle' | 'saving' | 'success' | 'error'; text: string }>({ kind: 'idle', text: '' })
+  const [open, setOpen] = useState(false)
 
   useEffect(() => {
     let active = true
@@ -193,17 +202,25 @@ function SettingsCard({ settings, loadModels }: SettingsCardProps): ReactNode {
     />
   }
 
-  if (snapshot.status === 'loading') return <div className="dact-card"><p>Loading title settings…</p></div>
-  if (snapshot.status === 'unavailable' || current === undefined) {
-    return <div className="dact-card"><h3>Automatic chat titles</h3><p>The host title-settings namespace is unavailable. Confirm that the host plugin is enabled.</p></div>
-  }
+  if (snapshot.status === 'unavailable') return null
 
-  return <div className="dact-card">
-    <div>
-      <h3>Automatic chat titles</h3>
-      <p>Generate semantic titles automatically from the first prompt, then regenerate from recent conversation context whenever needed.</p>
-    </div>
+  return <li className={`dact-card${open ? ' dact-card-open' : ''}`}>
+    <button
+      type="button"
+      className="dact-card-header"
+      aria-expanded={open}
+      aria-label={`${open ? 'Collapse' : 'Expand'}: Automatic chat titles`}
+      onClick={() => setOpen(value => !value)}
+    >
+      <span className="dact-card-head">
+        <span className="dact-card-name">Automatic chat titles</span>
+        <span className="dact-card-description">Generate semantic titles automatically, with configurable model and regeneration context.</span>
+      </span>
+      <span className="dact-card-chevron" aria-hidden="true">⌄</span>
+    </button>
 
+    {open ? <div className="dact-card-body">
+      {snapshot.status === 'loading' || current === undefined ? <p>Loading title settings…</p> : <>
     <div className="dact-grid">
       <label className="dact-label" htmlFor="dact-route">Title model<small>Follow the chat model or choose a dedicated inexpensive model.</small></label>
       <select id="dact-route" className="dact-input" value={routeValue} disabled={!snapshot.writable} onChange={event => void chooseRoute(event.currentTarget.value)}>
@@ -239,7 +256,9 @@ function SettingsCard({ settings, loadModels }: SettingsCardProps): ReactNode {
       {!snapshot.writable ? <span className="dact-status">Settings are read-only in this runtime.</span> : null}
     </div>
     {catalogFailures.length > 0 ? <p className="dact-status" data-kind="error">Some model catalogs could not load: {catalogFailures.join('; ')}</p> : null}
-  </div>
+      </>}
+    </div> : null}
+  </li>
 }
 
 export function apply(ctx: Context): void {
