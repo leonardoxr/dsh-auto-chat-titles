@@ -33,7 +33,7 @@ interface SettingsCardProps {
   loadModels(): Promise<{ groups: ModelProviderGroup[]; failures: string[] }>
 }
 
-export const inject = ['slots', 'sessions']
+export const inject = ['slots', 'sessions', 'connection', 'settingsScope']
 
 function decodeSettings(value: unknown): TitleSettings | undefined {
   if (typeof value !== 'object' || value === null) return undefined
@@ -258,22 +258,20 @@ export function apply(ctx: Context): void {
     }),
   }, RegenerateAction))
 
-  ctx.inject(['settingsScope'], scoped => {
-    const settings = scoped.settingsScope.bind<TitleSettings>({ namespace: NS, decode: decodeSettings })
-    const api = scoped.get('connection').api
-    const loadModels = async () => {
-      const response = await api.llm.models({})
-      if (!response.result.ok) throw new Error(response.result.error.message)
-      return {
-        groups: response.result.value.groups,
-        failures: response.result.value.failures.map((failure: { name: string; message: string }) => `${failure.name}: ${failure.message}`),
-      }
+  const settings = ctx.settingsScope.bind<TitleSettings>({ namespace: NS, decode: decodeSettings })
+  const api = ctx.get('connection').api
+  const loadModels = async () => {
+    const response = await api.llm.models({})
+    if (!response.result.ok) throw new Error(response.result.error.message)
+    return {
+      groups: response.result.value.groups,
+      failures: response.result.value.failures.map((failure: { name: string; message: string }) => `${failure.name}: ${failure.message}`),
     }
-    scoped.slots.inject('settings.plugin.item', () => scoped.slots.register({
-      name: 'settings.plugin.item',
-      key: NS,
-      locale: NS,
-      inject: () => ({ settings, loadModels }),
-    }, SettingsCard))
-  })
+  }
+  ctx.slots.inject('settings.plugin.item', () => ctx.slots.register({
+    name: 'settings.plugin.item',
+    key: NS,
+    locale: NS,
+    inject: () => ({ settings, loadModels }),
+  }, SettingsCard))
 }

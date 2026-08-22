@@ -8,7 +8,12 @@ window.__ModuleLoader__.load({ id: "dsh-auto-chat-titles", factory: (require) =>
 		const PLUGIN_ID = "dsh-auto-chat-titles";
 		const NS = "auto-chat-titles";
 		const STYLE_ID = "dsh-auto-chat-titles/styles";
-		const inject = ["slots", "sessions"];
+		const inject = [
+			"slots",
+			"sessions",
+			"connection",
+			"settingsScope"
+		];
 		function decodeSettings(value) {
 			if (typeof value !== "object" || value === null) return void 0;
 			const item = value;
@@ -322,30 +327,28 @@ window.__ModuleLoader__.load({ id: "dsh-auto-chat-titles", factory: (require) =>
 					if (!result.value.matched) throw new Error("Regenerate-title command is unavailable");
 				} })
 			}, RegenerateAction));
-			ctx.inject(["settingsScope"], (scoped) => {
-				const settings = scoped.settingsScope.bind({
-					namespace: NS,
-					decode: decodeSettings
-				});
-				const api = scoped.get("connection").api;
-				const loadModels = async () => {
-					const response = await api.llm.models({});
-					if (!response.result.ok) throw new Error(response.result.error.message);
-					return {
-						groups: response.result.value.groups,
-						failures: response.result.value.failures.map((failure) => `${failure.name}: ${failure.message}`)
-					};
-				};
-				scoped.slots.inject("settings.plugin.item", () => scoped.slots.register({
-					name: "settings.plugin.item",
-					key: NS,
-					locale: NS,
-					inject: () => ({
-						settings,
-						loadModels
-					})
-				}, SettingsCard));
+			const settings = ctx.settingsScope.bind({
+				namespace: NS,
+				decode: decodeSettings
 			});
+			const api = ctx.get("connection").api;
+			const loadModels = async () => {
+				const response = await api.llm.models({});
+				if (!response.result.ok) throw new Error(response.result.error.message);
+				return {
+					groups: response.result.value.groups,
+					failures: response.result.value.failures.map((failure) => `${failure.name}: ${failure.message}`)
+				};
+			};
+			ctx.slots.inject("settings.plugin.item", () => ctx.slots.register({
+				name: "settings.plugin.item",
+				key: NS,
+				locale: NS,
+				inject: () => ({
+					settings,
+					loadModels
+				})
+			}, SettingsCard));
 		}
 		//#endregion
 		exports.apply = apply;
