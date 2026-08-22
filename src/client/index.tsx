@@ -258,7 +258,6 @@ export function apply(ctx: Context): void {
     }),
   }, RegenerateAction))
 
-  const settings = ctx.settingsScope.bind<TitleSettings>({ namespace: NS, decode: decodeSettings })
   const api = ctx.get('connection').api
   const loadModels = async () => {
     const response = await api.llm.models({})
@@ -271,7 +270,9 @@ export function apply(ctx: Context): void {
   ctx.slots.inject('settings.plugin.item', () => ctx.slots.register({
     name: 'settings.plugin.item',
     key: NS,
-    locale: NS,
-    inject: () => ({ settings, loadModels }),
+    inject: () => ({
+      settings: ctx.settingsScope.bind<TitleSettings>({ namespace: NS, decode: decodeSettings }),
+      loadModels,
+    }),
   }, SettingsCard))
 }

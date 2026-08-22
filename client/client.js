@@ -327,10 +327,6 @@ window.__ModuleLoader__.load({ id: "dsh-auto-chat-titles", factory: (require) =>
 					if (!result.value.matched) throw new Error("Regenerate-title command is unavailable");
 				} })
 			}, RegenerateAction));
-			const settings = ctx.settingsScope.bind({
-				namespace: NS,
-				decode: decodeSettings
-			});
 			const api = ctx.get("connection").api;
 			const loadModels = async () => {
 				const response = await api.llm.models({});
@@ -343,9 +339,11 @@ window.__ModuleLoader__.load({ id: "dsh-auto-chat-titles", factory: (require) =>
 			ctx.slots.inject("settings.plugin.item", () => ctx.slots.register({
 				name: "settings.plugin.item",
 				key: NS,
-				locale: NS,
 				inject: () => ({
-					settings,
+					settings: ctx.settingsScope.bind({
+						namespace: NS,
+						decode: decodeSettings
+					}),
 					loadModels
 				})
 			}, SettingsCard));
