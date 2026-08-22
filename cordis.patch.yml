@@ -1,0 +1,9 @@
+# DeepSeek Harness bundle patch.
+# Keep the core session-title service; replace only its bundled first-prompt LLM provider.
+- id: session-title-llm
+  disabled: true
+
+- insert:
+    - id: auto-chat-titles
+      name: 'dsh-auto-chat-titles'
+      config: {}
