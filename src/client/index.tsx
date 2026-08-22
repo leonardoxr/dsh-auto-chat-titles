@@ -111,7 +111,11 @@ function RegenerateAction({ sessionId, regenerate }: RegenerateActionProps): Rea
 }
 
 function SettingsCard({ settings, loadModels }: SettingsCardProps): ReactNode {
-  const snapshot = useSyncExternalStore(settings.subscribe, settings.getSnapshot, settings.getSnapshot)
+  const snapshot = useSyncExternalStore(
+    listener => settings.subscribe(listener),
+    () => settings.getSnapshot(),
+    () => settings.getSnapshot(),
+  )
   const current = snapshot.value
   const [groups, setGroups] = useState<ModelProviderGroup[]>([])
   const [catalogFailures, setCatalogFailures] = useState<string[]>([])

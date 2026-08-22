@@ -94,7 +94,7 @@ window.__ModuleLoader__.load({ id: "dsh-auto-chat-titles", factory: (require) =>
 			});
 		}
 		function SettingsCard({ settings, loadModels }) {
-			const snapshot = (0, react.useSyncExternalStore)(settings.subscribe, settings.getSnapshot, settings.getSnapshot);
+			const snapshot = (0, react.useSyncExternalStore)((listener) => settings.subscribe(listener), () => settings.getSnapshot(), () => settings.getSnapshot());
 			const current = snapshot.value;
 			const [groups, setGroups] = (0, react.useState)([]);
 			const [catalogFailures, setCatalogFailures] = (0, react.useState)([]);
