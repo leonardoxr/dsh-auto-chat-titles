@@ -6,10 +6,10 @@ import type {} from '@deepseek-ai/dsh-client-connection/client'
 import type {} from '@deepseek-ai/dsh-client-ui-settings/client'
 import type {} from '@deepseek-ai/dsh-client-ui-settings-plugins/client'
 import type {} from '@deepseek-ai/dsh-client-ui-conversation/client'
+import { STYLE_ID, styles } from './styles.ts'
 
 const PLUGIN_ID = 'dsh-auto-chat-titles'
 const NS = 'auto-chat-titles'
-const STYLE_ID = 'dsh-auto-chat-titles/styles'
 
 interface TitleSettings {
   routeMode: 'conversation' | 'fixed'
@@ -57,37 +57,7 @@ function installStyles(): () => void {
   const tag = document.createElement('style')
   tag.dataset.plugin = PLUGIN_ID
   tag.dataset.pluginCss = STYLE_ID
-  tag.textContent = `
-    .dact-action{border:1px solid var(--dsw-alias-border-l2);height:32px;color:var(--dsw-alias-label-primary);font:inherit;cursor:pointer;background:transparent;border-radius:18px;display:inline-flex;align-items:center;gap:6px;padding:5px 12px;font-size:13px;line-height:20px}
-    .dact-action:hover:not(:disabled){background:var(--dsw-alias-interactive-bg-hover)}
-    .dact-action:disabled{color:var(--dsw-alias-label-dimmed);cursor:wait}
-    .dact-spin{width:12px;height:12px;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;animation:dact-spin .7s linear infinite}
-    @keyframes dact-spin{to{transform:rotate(360deg)}}
-    .dact-card{box-sizing:border-box;max-width:720px;color:var(--dsw-alias-label-primary);list-style:none;border:1px solid var(--dsw-alias-border-l2);border-radius:16px;overflow:hidden;background:var(--dsw-alias-bg-elevated,transparent)}
-    .dact-card-open{border-color:var(--dsw-alias-border-l1)}
-    .dact-card-header{box-sizing:border-box;width:100%;border:0;background:transparent;color:inherit;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:20px 22px;text-align:left;font:inherit;cursor:pointer}
-    .dact-card-header:hover{background:var(--dsw-alias-interactive-bg-hover)}
-    .dact-card-head{display:flex;min-width:0;flex:1;flex-direction:column;gap:5px}
-    .dact-card-name{font-size:16px;line-height:24px;font-weight:600}
-    .dact-card-description{color:var(--dsw-alias-label-tertiary);font-size:13px;line-height:20px}
-    .dact-card-chevron{flex:none;color:var(--dsw-alias-label-secondary);font-size:18px;line-height:1;transition:transform .18s ease}
-    .dact-card-open .dact-card-chevron{transform:rotate(180deg)}
-    .dact-card-body{display:flex;flex-direction:column;gap:14px;padding:4px 22px 22px}
-    .dact-card p{color:var(--dsw-alias-label-tertiary);font-size:13px;line-height:20px;margin:0}
-    .dact-grid{display:grid;grid-template-columns:minmax(150px,220px) minmax(220px,1fr);gap:12px 18px;align-items:center}
-    .dact-label{display:flex;flex-direction:column;gap:2px;font-size:14px}
-    .dact-label small{color:var(--dsw-alias-label-tertiary);font-size:12px;line-height:18px}
-    .dact-input{box-sizing:border-box;width:100%;min-height:36px;border:1px solid var(--dsw-alias-border-l2);border-radius:8px;background:var(--dsw-alias-bg-base);color:var(--dsw-alias-label-primary);padding:6px 10px;font:inherit}
-    .dact-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-    .dact-button{border:1px solid var(--dsw-alias-border-l2);border-radius:18px;background:transparent;color:var(--dsw-alias-label-primary);padding:7px 14px;font:inherit;cursor:pointer}
-    .dact-button:hover:not(:disabled){background:var(--dsw-alias-interactive-bg-hover)}
-    .dact-status{font-size:12px;line-height:18px;color:var(--dsw-alias-label-tertiary)}
-    .dact-status[data-kind="error"]{color:var(--dsw-alias-state-error-primary)}
-    .dact-status[data-kind="success"]{color:var(--dsw-alias-state-success-primary)}
-    .dact-card details{border-top:1px solid var(--dsw-alias-border-l3);padding-top:12px}
-    .dact-card summary{cursor:pointer;font-size:13px;color:var(--dsw-alias-label-secondary);margin-bottom:12px}
-    @media(max-width:640px){.dact-grid{grid-template-columns:1fr;gap:6px}.dact-grid>.dact-input{margin-bottom:8px}}
-  `
+  tag.textContent = styles
   document.head.appendChild(tag)
   return () => tag.remove()
 }
@@ -204,7 +174,7 @@ function SettingsCard({ settings, loadModels }: SettingsCardProps): ReactNode {
 
   if (snapshot.status === 'unavailable') return null
 
-  return <li className={`dact-card${open ? ' dact-card-open' : ''}`}>
+  return <li className="dact-card" data-open={open}>
     <button
       type="button"
       className="dact-card-header"
@@ -216,46 +186,68 @@ function SettingsCard({ settings, loadModels }: SettingsCardProps): ReactNode {
         <span className="dact-card-name">Automatic chat titles</span>
         <span className="dact-card-description">Generate semantic titles automatically, with configurable model and regeneration context.</span>
       </span>
-      <span className="dact-card-chevron" aria-hidden="true">⌄</span>
+      <svg className="dact-card-chevron" viewBox="0 0 20 20" aria-hidden="true">
+        <path d="m5 7.5 5 5 5-5" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
     </button>
 
     {open ? <div className="dact-card-body">
       {snapshot.status === 'loading' || current === undefined ? <p>Loading title settings…</p> : <>
-    <div className="dact-grid">
-      <label className="dact-label" htmlFor="dact-route">Title model<small>Follow the chat model or choose a dedicated inexpensive model.</small></label>
-      <select id="dact-route" className="dact-input" value={routeValue} disabled={!snapshot.writable} onChange={event => void chooseRoute(event.currentTarget.value)}>
-        <option value="conversation">Same as conversation</option>
-        {routeValue !== 'conversation' && !knownRoutes.has(routeValue) ? <option value={routeValue}>{current.provider} / {current.model} (unlisted)</option> : null}
-        {groups.map(group => <optgroup key={group.id} label={group.name}>
-          {group.models.map(model => <option key={model.id} value={`${group.id}\u0000${model.id}`}>{model.name}</option>)}
-        </optgroup>)}
-      </select>
+        <div className="dact-fields">
+          <div className="dact-field">
+            <label className="dact-label" htmlFor="dact-route">Title model<small>Follow the chat model or choose a dedicated inexpensive model.</small></label>
+            <select id="dact-route" className="dact-input" value={routeValue} disabled={!snapshot.writable} onChange={event => void chooseRoute(event.currentTarget.value)}>
+              <option value="conversation">Same as conversation</option>
+              {routeValue !== 'conversation' && !knownRoutes.has(routeValue) ? <option value={routeValue}>{current.provider} / {current.model} (unlisted)</option> : null}
+              {groups.map(group => <optgroup key={group.id} label={group.name}>
+                {group.models.map(model => <option key={model.id} value={`${group.id}\u0000${model.id}`}>{model.name}</option>)}
+              </optgroup>)}
+            </select>
+          </div>
 
-      <label className="dact-label" htmlFor="dact-words">Title length<small>Target words for non-CJK languages.</small></label>
-      {numberField('targetWords', 5, 1, 20, 'dact-words')}
+          <div className="dact-field">
+            <label className="dact-label" htmlFor="dact-words">Title length<small>Target words for non-CJK languages.</small></label>
+            {numberField('targetWords', 5, 1, 20, 'dact-words')}
+          </div>
 
-      <label className="dact-label" htmlFor="dact-messages">Regeneration context<small>Recent human messages used by Regenerate title.</small></label>
-      {numberField('maxMessages', 12, 1, 100, 'dact-messages')}
-    </div>
+          <div className="dact-field">
+            <label className="dact-label" htmlFor="dact-messages">Regeneration context<small>Recent human messages used by Regenerate title.</small></label>
+            {numberField('maxMessages', 12, 1, 100, 'dact-messages')}
+          </div>
+        </div>
 
-    <details>
-      <summary>Advanced generation limits</summary>
-      <div className="dact-grid">
-        <span className="dact-label">CJK title characters</span>{numberField('targetCjkCharacters', 10, 1, 40)}
-        <span className="dact-label">Maximum input bytes</span>{numberField('maxInputBytes', 8192, 256, 65536)}
-        <span className="dact-label">Maximum output tokens</span>{numberField('maxOutputTokens', 64, 8, 256)}
-        <span className="dact-label">Timeout (milliseconds)</span>{numberField('timeoutMs', 60000, 1000, 300000)}
-      </div>
-    </details>
+        <details>
+          <summary>Advanced generation limits</summary>
+          <div className="dact-fields">
+            <div className="dact-field">
+              <label className="dact-label" htmlFor="dact-cjk">CJK title characters<small>Target title length for CJK languages.</small></label>
+              {numberField('targetCjkCharacters', 10, 1, 40, 'dact-cjk')}
+            </div>
+            <div className="dact-field">
+              <label className="dact-label" htmlFor="dact-input-bytes">Maximum input bytes<small>Bound the conversation context sent for title generation.</small></label>
+              {numberField('maxInputBytes', 8192, 256, 65536, 'dact-input-bytes')}
+            </div>
+            <div className="dact-field">
+              <label className="dact-label" htmlFor="dact-output-tokens">Maximum output tokens<small>Bound the title model response.</small></label>
+              {numberField('maxOutputTokens', 64, 8, 256, 'dact-output-tokens')}
+            </div>
+            <div className="dact-field">
+              <label className="dact-label" htmlFor="dact-timeout">Timeout<small>Maximum generation time in milliseconds.</small></label>
+              {numberField('timeoutMs', 60000, 1000, 300000, 'dact-timeout')}
+            </div>
+          </div>
+        </details>
 
-    <div className="dact-row">
-      <button className="dact-button" type="button" disabled={!snapshot.writable} onClick={() => void save(async () => {
-        for (const field of ['routeMode', 'provider', 'model', 'targetWords', 'targetCjkCharacters', 'maxInputBytes', 'maxOutputTokens', 'timeoutMs', 'maxMessages']) await settings.unset(field)
-      })}>Reset defaults</button>
-      {status.text ? <span className="dact-status" data-kind={status.kind}>{status.text}</span> : null}
-      {!snapshot.writable ? <span className="dact-status">Settings are read-only in this runtime.</span> : null}
-    </div>
-    {catalogFailures.length > 0 ? <p className="dact-status" data-kind="error">Some model catalogs could not load: {catalogFailures.join('; ')}</p> : null}
+        {catalogFailures.length > 0 ? <p className="dact-message" data-kind="error">Some model catalogs could not load: {catalogFailures.join('; ')}</p> : null}
+        <div className="dact-footer">
+          <div className="dact-footer-copy">
+            {status.text ? <span className="dact-status" data-kind={status.kind}>{status.text}</span> : null}
+            {!snapshot.writable ? <span className="dact-status">Settings are read-only in this runtime.</span> : null}
+          </div>
+          <button className="dact-button" type="button" disabled={!snapshot.writable} onClick={() => void save(async () => {
+            for (const field of ['routeMode', 'provider', 'model', 'targetWords', 'targetCjkCharacters', 'maxInputBytes', 'maxOutputTokens', 'timeoutMs', 'maxMessages']) await settings.unset(field)
+          })}>Reset defaults</button>
+        </div>
       </>}
     </div> : null}
   </li>
