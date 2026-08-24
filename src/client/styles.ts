@@ -17,15 +17,15 @@ export const styles = `.dact-action{border:1px solid var(--dsw-alias-border-l2);
 .dact-card[data-open=true] .dact-card-chevron{transform:rotate(180deg)}
 .dact-card-body{border-top:1px solid var(--dsw-alias-border-l2);margin:0 16px;padding:4px 0 8px}
 .dact-card p{color:var(--dsw-alias-label-tertiary);font-size:12px;line-height:1.5;margin:12px 0}
-.dact-field{display:flex;flex-direction:column;gap:7px;padding:12px 0}
+.dact-field{display:flex;flex-direction:column;gap:6px;padding:12px 0}
 .dact-field+.dact-field{border-top:1px solid var(--dsw-alias-border-l2)}
-.dact-label{display:flex;flex-direction:column;gap:2px;color:var(--dsw-alias-label-primary);font-size:13px;font-weight:500;line-height:1.5}
-.dact-label small{color:var(--dsw-alias-label-tertiary);font-size:12px;font-weight:400;line-height:1.5}
+.dact-label{color:var(--dsw-alias-label-primary);font-size:13px;font-weight:500;line-height:1.5}
+.dact-hint{color:var(--dsw-alias-label-tertiary);margin:0;font-size:12px;line-height:1.5}
 .dact-input{box-sizing:border-box;width:100%;height:34px;border:1px solid var(--dsw-alias-border-l2);border-radius:8px;background:var(--dsw-alias-bg-layer-3);color:var(--dsw-alias-label-primary);padding:0 12px;font:inherit;font-size:13px;line-height:1.5}
 .dact-input:focus{border-color:var(--dsw-alias-brand-primary)}
-.dact-input:disabled{cursor:default;opacity:.45}
+.dact-input:disabled{color:var(--dsw-alias-label-tertiary);cursor:default}
 .dact-card details{border-top:1px solid var(--dsw-alias-border-l2)}
-.dact-card summary{border-radius:6px;cursor:pointer;color:var(--dsw-alias-label-secondary);padding:12px 0;font-size:12px;font-weight:600;line-height:1.5;text-transform:uppercase;letter-spacing:.04em}
+.dact-card summary{border-radius:6px;cursor:pointer;color:var(--dsw-alias-label-secondary);padding:12px 0;font-size:13px;font-weight:500;line-height:1.5}
 .dact-card details[open] summary{border-bottom:1px solid var(--dsw-alias-border-l2);margin-bottom:0}
 .dact-message{color:var(--dsw-alias-label-tertiary);font-size:12px;line-height:1.5}
 .dact-message[data-kind=error]{color:var(--dsw-alias-label-error)}

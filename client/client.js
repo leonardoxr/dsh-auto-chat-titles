@@ -23,15 +23,15 @@ window.__ModuleLoader__.load({ id: "dsh-auto-chat-titles", factory: (require) =>
 .dact-card[data-open=true] .dact-card-chevron{transform:rotate(180deg)}
 .dact-card-body{border-top:1px solid var(--dsw-alias-border-l2);margin:0 16px;padding:4px 0 8px}
 .dact-card p{color:var(--dsw-alias-label-tertiary);font-size:12px;line-height:1.5;margin:12px 0}
-.dact-field{display:flex;flex-direction:column;gap:7px;padding:12px 0}
+.dact-field{display:flex;flex-direction:column;gap:6px;padding:12px 0}
 .dact-field+.dact-field{border-top:1px solid var(--dsw-alias-border-l2)}
-.dact-label{display:flex;flex-direction:column;gap:2px;color:var(--dsw-alias-label-primary);font-size:13px;font-weight:500;line-height:1.5}
-.dact-label small{color:var(--dsw-alias-label-tertiary);font-size:12px;font-weight:400;line-height:1.5}
+.dact-label{color:var(--dsw-alias-label-primary);font-size:13px;font-weight:500;line-height:1.5}
+.dact-hint{color:var(--dsw-alias-label-tertiary);margin:0;font-size:12px;line-height:1.5}
 .dact-input{box-sizing:border-box;width:100%;height:34px;border:1px solid var(--dsw-alias-border-l2);border-radius:8px;background:var(--dsw-alias-bg-layer-3);color:var(--dsw-alias-label-primary);padding:0 12px;font:inherit;font-size:13px;line-height:1.5}
 .dact-input:focus{border-color:var(--dsw-alias-brand-primary)}
-.dact-input:disabled{cursor:default;opacity:.45}
+.dact-input:disabled{color:var(--dsw-alias-label-tertiary);cursor:default}
 .dact-card details{border-top:1px solid var(--dsw-alias-border-l2)}
-.dact-card summary{border-radius:6px;cursor:pointer;color:var(--dsw-alias-label-secondary);padding:12px 0;font-size:12px;font-weight:600;line-height:1.5;text-transform:uppercase;letter-spacing:.04em}
+.dact-card summary{border-radius:6px;cursor:pointer;color:var(--dsw-alias-label-secondary);padding:12px 0;font-size:13px;font-weight:500;line-height:1.5}
 .dact-card details[open] summary{border-bottom:1px solid var(--dsw-alias-border-l2);margin-bottom:0}
 .dact-message{color:var(--dsw-alias-label-tertiary);font-size:12px;line-height:1.5}
 .dact-message[data-kind=error]{color:var(--dsw-alias-label-error)}
@@ -242,55 +242,76 @@ window.__ModuleLoader__.load({ id: "dsh-auto-chat-titles", factory: (require) =>
 							children: [
 								/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
 									className: "dact-field",
-									children: [/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("label", {
-										className: "dact-label",
-										htmlFor: "dact-route",
-										children: ["Title model", /* @__PURE__ */ (0, react_jsx_runtime.jsx)("small", { children: "Follow the chat model or choose a dedicated inexpensive model." })]
-									}), /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("select", {
-										id: "dact-route",
-										className: "dact-input",
-										value: routeValue,
-										disabled: !snapshot.writable,
-										onChange: (event) => void chooseRoute(event.currentTarget.value),
-										children: [
-											/* @__PURE__ */ (0, react_jsx_runtime.jsx)("option", {
-												value: "conversation",
-												children: "Same as conversation"
-											}),
-											routeValue !== "conversation" && !knownRoutes.has(routeValue) ? /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("option", {
-												value: routeValue,
-												children: [
-													current.provider,
-													" / ",
-													current.model,
-													" (unlisted)"
-												]
-											}) : null,
-											groups.map((group) => /* @__PURE__ */ (0, react_jsx_runtime.jsx)("optgroup", {
-												label: group.name,
-												children: group.models.map((model) => /* @__PURE__ */ (0, react_jsx_runtime.jsx)("option", {
-													value: `${group.id}\u0000${model.id}`,
-													children: model.name
-												}, model.id))
-											}, group.id))
-										]
-									})]
+									children: [
+										/* @__PURE__ */ (0, react_jsx_runtime.jsx)("label", {
+											className: "dact-label",
+											htmlFor: "dact-route",
+											children: "Title model"
+										}),
+										/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("select", {
+											id: "dact-route",
+											className: "dact-input",
+											value: routeValue,
+											disabled: !snapshot.writable,
+											onChange: (event) => void chooseRoute(event.currentTarget.value),
+											children: [
+												/* @__PURE__ */ (0, react_jsx_runtime.jsx)("option", {
+													value: "conversation",
+													children: "Same as conversation"
+												}),
+												routeValue !== "conversation" && !knownRoutes.has(routeValue) ? /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("option", {
+													value: routeValue,
+													children: [
+														current.provider,
+														" / ",
+														current.model,
+														" (unlisted)"
+													]
+												}) : null,
+												groups.map((group) => /* @__PURE__ */ (0, react_jsx_runtime.jsx)("optgroup", {
+													label: group.name,
+													children: group.models.map((model) => /* @__PURE__ */ (0, react_jsx_runtime.jsx)("option", {
+														value: `${group.id}\u0000${model.id}`,
+														children: model.name
+													}, model.id))
+												}, group.id))
+											]
+										}),
+										/* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", {
+											className: "dact-hint",
+											children: "Follow the chat model or choose a dedicated inexpensive model."
+										})
+									]
 								}),
 								/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
 									className: "dact-field",
-									children: [/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("label", {
-										className: "dact-label",
-										htmlFor: "dact-words",
-										children: ["Title length", /* @__PURE__ */ (0, react_jsx_runtime.jsx)("small", { children: "Target words for non-CJK languages." })]
-									}), numberField("targetWords", 5, 1, 20, "dact-words")]
+									children: [
+										/* @__PURE__ */ (0, react_jsx_runtime.jsx)("label", {
+											className: "dact-label",
+											htmlFor: "dact-words",
+											children: "Title length"
+										}),
+										numberField("targetWords", 5, 1, 20, "dact-words"),
+										/* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", {
+											className: "dact-hint",
+											children: "Target words for non-CJK languages."
+										})
+									]
 								}),
 								/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
 									className: "dact-field",
-									children: [/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("label", {
-										className: "dact-label",
-										htmlFor: "dact-messages",
-										children: ["Regeneration context", /* @__PURE__ */ (0, react_jsx_runtime.jsx)("small", { children: "Recent human messages used by Regenerate title." })]
-									}), numberField("maxMessages", 12, 1, 100, "dact-messages")]
+									children: [
+										/* @__PURE__ */ (0, react_jsx_runtime.jsx)("label", {
+											className: "dact-label",
+											htmlFor: "dact-messages",
+											children: "Regeneration context"
+										}),
+										numberField("maxMessages", 12, 1, 100, "dact-messages"),
+										/* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", {
+											className: "dact-hint",
+											children: "Recent human messages used by Regenerate title."
+										})
+									]
 								})
 							]
 						}),
@@ -299,35 +320,63 @@ window.__ModuleLoader__.load({ id: "dsh-auto-chat-titles", factory: (require) =>
 							children: [
 								/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
 									className: "dact-field",
-									children: [/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("label", {
-										className: "dact-label",
-										htmlFor: "dact-cjk",
-										children: ["CJK title characters", /* @__PURE__ */ (0, react_jsx_runtime.jsx)("small", { children: "Target title length for CJK languages." })]
-									}), numberField("targetCjkCharacters", 10, 1, 40, "dact-cjk")]
+									children: [
+										/* @__PURE__ */ (0, react_jsx_runtime.jsx)("label", {
+											className: "dact-label",
+											htmlFor: "dact-cjk",
+											children: "CJK title characters"
+										}),
+										numberField("targetCjkCharacters", 10, 1, 40, "dact-cjk"),
+										/* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", {
+											className: "dact-hint",
+											children: "Target title length for CJK languages."
+										})
+									]
 								}),
 								/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
 									className: "dact-field",
-									children: [/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("label", {
-										className: "dact-label",
-										htmlFor: "dact-input-bytes",
-										children: ["Maximum input bytes", /* @__PURE__ */ (0, react_jsx_runtime.jsx)("small", { children: "Bound the conversation context sent for title generation." })]
-									}), numberField("maxInputBytes", 8192, 256, 65536, "dact-input-bytes")]
+									children: [
+										/* @__PURE__ */ (0, react_jsx_runtime.jsx)("label", {
+											className: "dact-label",
+											htmlFor: "dact-input-bytes",
+											children: "Maximum input bytes"
+										}),
+										numberField("maxInputBytes", 8192, 256, 65536, "dact-input-bytes"),
+										/* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", {
+											className: "dact-hint",
+											children: "Bound the conversation context sent for title generation."
+										})
+									]
 								}),
 								/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
 									className: "dact-field",
-									children: [/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("label", {
-										className: "dact-label",
-										htmlFor: "dact-output-tokens",
-										children: ["Maximum output tokens", /* @__PURE__ */ (0, react_jsx_runtime.jsx)("small", { children: "Bound the title model response." })]
-									}), numberField("maxOutputTokens", 64, 8, 256, "dact-output-tokens")]
+									children: [
+										/* @__PURE__ */ (0, react_jsx_runtime.jsx)("label", {
+											className: "dact-label",
+											htmlFor: "dact-output-tokens",
+											children: "Maximum output tokens"
+										}),
+										numberField("maxOutputTokens", 64, 8, 256, "dact-output-tokens"),
+										/* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", {
+											className: "dact-hint",
+											children: "Bound the title model response."
+										})
+									]
 								}),
 								/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
 									className: "dact-field",
-									children: [/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("label", {
-										className: "dact-label",
-										htmlFor: "dact-timeout",
-										children: ["Timeout", /* @__PURE__ */ (0, react_jsx_runtime.jsx)("small", { children: "Maximum generation time in milliseconds." })]
-									}), numberField("timeoutMs", 6e4, 1e3, 3e5, "dact-timeout")]
+									children: [
+										/* @__PURE__ */ (0, react_jsx_runtime.jsx)("label", {
+											className: "dact-label",
+											htmlFor: "dact-timeout",
+											children: "Timeout"
+										}),
+										numberField("timeoutMs", 6e4, 1e3, 3e5, "dact-timeout"),
+										/* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", {
+											className: "dact-hint",
+											children: "Maximum generation time in milliseconds."
+										})
+									]
 								})
 							]
 						})] }),

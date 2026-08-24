@@ -195,7 +195,7 @@ function SettingsCard({ settings, loadModels }: SettingsCardProps): ReactNode {
       {snapshot.status === 'loading' || current === undefined ? <p>Loading title settings…</p> : <>
         <div className="dact-fields">
           <div className="dact-field">
-            <label className="dact-label" htmlFor="dact-route">Title model<small>Follow the chat model or choose a dedicated inexpensive model.</small></label>
+            <label className="dact-label" htmlFor="dact-route">Title model</label>
             <select id="dact-route" className="dact-input" value={routeValue} disabled={!snapshot.writable} onChange={event => void chooseRoute(event.currentTarget.value)}>
               <option value="conversation">Same as conversation</option>
               {routeValue !== 'conversation' && !knownRoutes.has(routeValue) ? <option value={routeValue}>{current.provider} / {current.model} (unlisted)</option> : null}
@@ -203,16 +203,19 @@ function SettingsCard({ settings, loadModels }: SettingsCardProps): ReactNode {
                 {group.models.map(model => <option key={model.id} value={`${group.id}\u0000${model.id}`}>{model.name}</option>)}
               </optgroup>)}
             </select>
+            <p className="dact-hint">Follow the chat model or choose a dedicated inexpensive model.</p>
           </div>
 
           <div className="dact-field">
-            <label className="dact-label" htmlFor="dact-words">Title length<small>Target words for non-CJK languages.</small></label>
+            <label className="dact-label" htmlFor="dact-words">Title length</label>
             {numberField('targetWords', 5, 1, 20, 'dact-words')}
+            <p className="dact-hint">Target words for non-CJK languages.</p>
           </div>
 
           <div className="dact-field">
-            <label className="dact-label" htmlFor="dact-messages">Regeneration context<small>Recent human messages used by Regenerate title.</small></label>
+            <label className="dact-label" htmlFor="dact-messages">Regeneration context</label>
             {numberField('maxMessages', 12, 1, 100, 'dact-messages')}
+            <p className="dact-hint">Recent human messages used by Regenerate title.</p>
           </div>
         </div>
 
@@ -220,20 +223,24 @@ function SettingsCard({ settings, loadModels }: SettingsCardProps): ReactNode {
           <summary>Advanced generation limits</summary>
           <div className="dact-fields">
             <div className="dact-field">
-              <label className="dact-label" htmlFor="dact-cjk">CJK title characters<small>Target title length for CJK languages.</small></label>
+              <label className="dact-label" htmlFor="dact-cjk">CJK title characters</label>
               {numberField('targetCjkCharacters', 10, 1, 40, 'dact-cjk')}
+              <p className="dact-hint">Target title length for CJK languages.</p>
             </div>
             <div className="dact-field">
-              <label className="dact-label" htmlFor="dact-input-bytes">Maximum input bytes<small>Bound the conversation context sent for title generation.</small></label>
+              <label className="dact-label" htmlFor="dact-input-bytes">Maximum input bytes</label>
               {numberField('maxInputBytes', 8192, 256, 65536, 'dact-input-bytes')}
+              <p className="dact-hint">Bound the conversation context sent for title generation.</p>
             </div>
             <div className="dact-field">
-              <label className="dact-label" htmlFor="dact-output-tokens">Maximum output tokens<small>Bound the title model response.</small></label>
+              <label className="dact-label" htmlFor="dact-output-tokens">Maximum output tokens</label>
               {numberField('maxOutputTokens', 64, 8, 256, 'dact-output-tokens')}
+              <p className="dact-hint">Bound the title model response.</p>
             </div>
             <div className="dact-field">
-              <label className="dact-label" htmlFor="dact-timeout">Timeout<small>Maximum generation time in milliseconds.</small></label>
+              <label className="dact-label" htmlFor="dact-timeout">Timeout</label>
               {numberField('timeoutMs', 60000, 1000, 300000, 'dact-timeout')}
+              <p className="dact-hint">Maximum generation time in milliseconds.</p>
             </div>
           </div>
         </details>
