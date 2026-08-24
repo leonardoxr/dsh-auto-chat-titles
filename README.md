@@ -1,5 +1,7 @@
 # dsh-auto-chat-titles
 
+English | [简体中文](README.zh.md)
+
 Semantic, configurable chat titles for [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness).
 
 The plugin keeps DSH's durable session-title service and replaces only its built-in provider policy. It adds:
@@ -25,12 +27,6 @@ Directly from GitHub:
 dsh plugin --profile web add github:leonardoxr/dsh-auto-chat-titles
 ```
 
-From npm after publication:
-
-```sh
-dsh plugin --profile web add dsh-auto-chat-titles
-```
-
 From a checkout while developing:
 
 ```sh
@@ -39,7 +35,7 @@ npm run check
 dsh plugin --profile web add "C:/absolute/path/to/dsh-auto-chat-titles"
 ```
 
-Restart the Web profile after host or bundle-patch changes, then refresh the existing DSH Web page. For browser-only development, run `npm run watch:client`; DSH client HMR can remount rebuilt bundles when the active Web runtime has its HMR chain enabled.
+Host output is hot-reloaded via the active watcher. Browser client changes require rebuilding the client artifacts and refreshing the existing DSH Web page.
 
 ## How it composes
 
